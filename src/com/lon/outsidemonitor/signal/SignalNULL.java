@@ -27,6 +27,11 @@ public class SignalNULL implements ISignal{
 		return 0;
 	}
 
+	public float getFreq()
+	{
+		return 0;
+	}
+	
 	public long getTime()
 	{
 		return 0;

@@ -15,6 +15,8 @@ public SignalType getSignalType();
 	 */
 	public float getDCAmpl();
 	
+	public float getFreq();
+	
 	public String getSignalInfo();
 	
 	public void copyTo(ISignal dest);

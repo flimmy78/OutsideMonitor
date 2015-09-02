@@ -226,7 +226,8 @@ public class SignalChannel {
 		} else {
 
 			for (int i = 0; i < 4; i++) {
-				WorkMode wkMode = new WorkMode(i, data, offset + 14 + i * 28,info.moduleType);
+				WorkMode wkMode = new WorkMode(i, data, offset + 14 + i * 28,
+						info.moduleType);
 				listGrear.add(wkMode);
 			}
 		}
@@ -234,11 +235,13 @@ public class SignalChannel {
 	}
 
 	public float calRealVal(float adVal, int freq) {
+		
 		if (gearNow < 0 || gearNow >= 4)
 			return adVal;
 
 		if (listGrear.size() <= gearNow)
 			return adVal;
+		
 		float r = listGrear.get(gearNow).calRealVal(adVal, freq);
 		return r;
 
@@ -369,7 +372,6 @@ public class SignalChannel {
 		}
 	}
 
-
 	/*
 	 * 采集信号的数字处理
 	 */
@@ -393,6 +395,9 @@ public class SignalChannel {
 
 		int ignoreLow = 5;
 
+		int[] um71List = new int[] { 1700, 2000, 2300, 2600 };
+		int[] ypList = new int[] { 550, 650, 750, 850 };
+
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
@@ -401,7 +406,7 @@ public class SignalChannel {
 
 			try {
 				while (!Thread.currentThread().isInterrupted()) {
-					
+
 					short[] sampleData = dataBlock.getBlock(-1);
 					if (sampleData == null)
 						continue;
@@ -417,7 +422,7 @@ public class SignalChannel {
 						data1[i] = sampleData[i];
 					}
 					if (SignalChannel.this.displayMode == 0) {
-						SignalUnknown signal = new SignalUnknown(signalAmplA,
+						SignalUnknown signal = new SignalUnknown(50,signalAmplA,
 								"A");
 						signal.setDCAmpl(0);
 						signal.setACAmpl(0);
@@ -439,24 +444,14 @@ public class SignalChannel {
 						}
 					}
 
-					if (SignalChannel.this.displayMode == 2) {
-						
-						SignalUnknown signal = new SignalUnknown(signalAmplA,
-								"A");
-						signal.setDCAmpl(0);
-						signal.setACAmpl(0);
-						signal.putRawData(sampleData);
-						signal.putSpectrumData(dataSpectrum);
-						SignalChannel.this.setSignal(signal);
-						continue;
-					}
-
+					
 					util.findPeaks(dataSpectrum, ignoreLow, sampleRate / 2,
 							peakVal, peakIndex); // 忽略直流信息
 
 					if (peakIndex[0] < 0)
 						continue; // 不存在极点
 
+				
 					boolean isSingle = false;
 					if (peakIndex[1] > 0) {
 						float rate = (float) Math.abs((peakVal[0] - peakVal[1])
@@ -491,7 +486,7 @@ public class SignalChannel {
 					if (peakIndex[peakIndex.length - 1] < 0) // 未知信号
 					{
 						signalAmplA.addAmpl(acAmpl, millisTime);
-						SignalUnknown signal = new SignalUnknown(signalAmplA,
+						SignalUnknown signal = new SignalUnknown(peakIndex[0],signalAmplA,
 								"A");
 						signal.setDCAmpl(dcAmpl);
 						signal.setACAmpl(acAmpl);
@@ -501,25 +496,47 @@ public class SignalChannel {
 						continue; // 不是移频 和UM71信号
 					}
 
-					boolean matchYP = true;
-					boolean matchUM71 = true;
+					boolean matchYP = false;
+					boolean matchUM71 = false;
 					float freqShift = 0;
 					int underSampleCount = 1;
-					for (int i = 0; i < 3; i++) {
-						if ((peakIndex[i] < 1700 - 200)
-								|| (peakIndex[i] > 2600 + 200)) {
-							matchUM71 = false;
+
+					for (int i = 0; i < um71List.length; i++) {
+						matchUM71 = true;
+						for (int j = 0; j < 3; j++) {
+							if ((peakIndex[j] < um71List[i] - 40)
+									|| (peakIndex[j] > um71List[i] + 40)) {
+								matchUM71 = false;
+								break;
+							}
 						}
-						if ((peakIndex[i] < 550 - 100)
-								|| (peakIndex[i] > 850 + 100)) {
-							matchYP = false;
+						if (matchUM71) {
+							float diffFreq = Math.abs(peakIndex[0]
+									- peakIndex[1]);
+							if (diffFreq < 9.5 || diffFreq > 31)
+								matchUM71 = false;
+							if (matchUM71)
+								break;
 						}
+
+					}
+					for (int i = 0; i < ypList.length; i++) {
+						matchYP = true;
+						for (int j = 0; j < 3; j++) {
+							if ((peakIndex[j] < ypList[i] - 100)
+									|| (peakIndex[j] > ypList[i] + 100)) {
+								matchYP = false;
+								break;
+							}
+						}
+						if (matchYP)
+							break;
 					}
 
 					if (matchUM71 == false && matchYP == false) // 未知信号
 					{
 						signalAmplA.addAmpl(acAmpl, millisTime);
-						SignalUnknown signal = new SignalUnknown(signalAmplA,
+						SignalUnknown signal = new SignalUnknown(peakIndex[0],signalAmplA,
 								"A");
 						signal.setDCAmpl(dcAmpl);
 						signal.setACAmpl(acAmpl);

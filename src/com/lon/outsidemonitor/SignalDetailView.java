@@ -21,8 +21,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-
-
 public class SignalDetailView extends View {
 
 	static final int sampleRate = 8000;
@@ -43,7 +41,7 @@ public class SignalDetailView extends View {
 
 	private float[] signalData;
 
-	float[] pointsList = new float[2 * 2000];// 入点 ，最大点，最小点，出点
+	float[] pointsList = new float[16 * 1000];// 入点 ，最大点，最小点，出点
 
 	Paint paint = new Paint();
 	PathEffect effects = new DashPathEffect(new float[] { 5, 5, 5, 5 }, 1); // 虚线效果
@@ -77,7 +75,7 @@ public class SignalDetailView extends View {
 	// 信号频谱绘制的相关参数
 	int specCenterIndex = 150; // 光标对应的数据的索引
 	int specXCursorIndex = 300; // X光标的位置
-	float specPixelPerData = 2; // 每个数据占用的像素数
+	float specPixelPerData = 5; // 每个数据占用的像素数
 	private float[] specSignalData; // 信号的频谱数据
 	private float specUpper = 8000; // 上限
 	private float specLower = 0;// 下限
@@ -105,9 +103,7 @@ public class SignalDetailView extends View {
 			drawMode = mode;
 			if (mode == DrawMode.SignalData) {
 				PixelPerData = -1;
-			}
-			else if(mode==DrawMode.SignalAmpl)
-			{
+			} else if (mode == DrawMode.SignalAmpl) {
 				amplPoints.clear();
 			}
 			invalidate(); // 刷新
@@ -117,18 +113,18 @@ public class SignalDetailView extends View {
 	public void setLimit(float upper, float lower) {
 		// this.upper=upper;
 		// this.lower=lower;
-//		this.lowerAmpl = 0;
-//		this.upperAmpl = upper;
-//
-//		if (drawMode == DrawMode.SignalData) // 实时数据
-//		{
-//
-//			this.postInvalidate();
-//		} else if (drawMode == DrawMode.SignalAmpl) // 信号幅度
-//		{
-//
-//			this.postInvalidate(); // 刷新
-//		}
+		// this.lowerAmpl = 0;
+		// this.upperAmpl = upper;
+		//
+		// if (drawMode == DrawMode.SignalData) // 实时数据
+		// {
+		//
+		// this.postInvalidate();
+		// } else if (drawMode == DrawMode.SignalAmpl) // 信号幅度
+		// {
+		//
+		// this.postInvalidate(); // 刷新
+		// }
 	}
 
 	public void zoomIn() {
@@ -245,25 +241,23 @@ public class SignalDetailView extends View {
 			return;
 		if ((this.signalData == null) || (this.signalData.length < data.length)) {
 			signalData = new float[data.length];
-		
+
 		}
-		
-		int maxAD=0;
-		int minAD=4096;
-		
+
+		int maxAD = 0;
+		int minAD = 4096;
+
 		for (int i = 0; i < data.length; i++) {
 			signalData[i] = data[i];
-			if(data[i]>maxAD)
-			{
-				maxAD=data[i];
+			if (data[i] > maxAD) {
+				maxAD = data[i];
 			}
-			if(data[i]<minAD)
-			{
-				minAD=data[i];
+			if (data[i] < minAD) {
+				minAD = data[i];
 			}
 		}
-		this.lower=minAD-(maxAD-minAD)*0.1f;
-		this.upper=maxAD+(maxAD-minAD)*0.1f;
+		this.lower = minAD - (maxAD - minAD) * 0.1f;
+		this.upper = maxAD + (maxAD - minAD) * 0.1f;
 		if (drawMode == DrawMode.SignalData) {
 			postInvalidate(); // 刷新
 		}
@@ -329,13 +323,13 @@ public class SignalDetailView extends View {
 						return;
 					specXCursorIndex = (int) (specPixelPerData
 							+ specXCursorIndex + 0.5f);
-					specCenterIndex++;
+					
 				} else {
 					if (specXCursorIndex - specPixelPerData < 0)
 						return;
 					specXCursorIndex = (int) (specXCursorIndex
 							- specPixelPerData + 0.5f);
-					specCenterIndex--;
+					
 				}
 			} else {
 				if (specXCursorIndex + offset > screenWidth - LeftMargin)
@@ -344,14 +338,13 @@ public class SignalDetailView extends View {
 					return;
 				specXCursorIndex += offset;
 
-				specCenterIndex += (int) (offset / specPixelPerData);
+				
 			}
 		}
 
 		postInvalidate(); // 刷新
 	}
 
-	
 	public void addSignalAmpl(SignalAmpl ampl) {
 		if (stoped)
 			return;
@@ -360,10 +353,9 @@ public class SignalDetailView extends View {
 
 		for (int i = 0; i < cnt; i++) {
 			SignalAmplPoint sPoint = ampl.getAmplPoint(i);
-			float sAmpl=sPoint.getAmpl();
-			if(sAmpl*1.1f>upperAmpl)
-			{
-				upperAmpl=sAmpl*1.1f;
+			float sAmpl = sPoint.getAmpl();
+			if (sAmpl * 1.1f > upperAmpl) {
+				upperAmpl = sAmpl * 1.1f;
 			}
 			AmplPoint point = new AmplPoint(sAmpl, sPoint.getTime());
 
@@ -805,6 +797,10 @@ public class SignalDetailView extends View {
 
 	}
 
+	public void updateSpecCenter(int center) {
+		specCenterIndex = center;
+	}
+
 	/*
 	 * 绘制信号的频谱
 	 */
@@ -815,9 +811,9 @@ public class SignalDetailView extends View {
 		screenHeight = this.getHeight();
 		int displayWidth = screenWidth - LeftMargin;
 
-		if (pointsList == null || pointsList.length / 8 < displayWidth) {
-			pointsList = new float[displayWidth * 8];
-		}
+//		if (pointsList == null || pointsList.length / 8 < displayWidth) {
+//			pointsList = new float[displayWidth * 8];
+//		}
 
 		if (specSignalData != null) {
 			float maxSpec = 0;
@@ -829,9 +825,9 @@ public class SignalDetailView extends View {
 				}
 			}
 			if (stoped == false) {
-				specCenterIndex = maxIndex;
-				specXCursorIndex = 300;
-				specPixelPerData = 2;
+				// specCenterIndex = maxIndex;
+				specXCursorIndex = screenWidth / 2;
+				//specPixelPerData = 2;
 			}
 			specUpper = maxSpec * (1 + 0.05f);
 			specYCenterVal = specUpper / 2;
@@ -877,6 +873,7 @@ public class SignalDetailView extends View {
 		paint.setPathEffect(null);
 		paint.setColor(Color.rgb(0, 255, 0));
 
+		// 绘制曲线
 		if (specSignalData != null) {
 
 			if (specPixelPerData >= 1) {
@@ -916,61 +913,68 @@ public class SignalDetailView extends View {
 
 			} else {
 
-				int leftIndex = (int) (specXCursorIndex - specCenterIndex
-						* specPixelPerData);
-				if (leftIndex < 0) {
-					leftIndex = 0;
-				}
+				int freqStartIndex = (int) (specCenterIndex - specXCursorIndex
+						/ specPixelPerData - 0.5f);
 
+				if (freqStartIndex < 0) {
+					freqStartIndex = 0;
+				}
 				int pointNum = 0;
-				for (int i = leftIndex; i < displayWidth; i++) {
-					int start = (int) ((i - specXCursorIndex)
-							/ specPixelPerData + specCenterIndex);
-					int stop = (int) ((i + 1 - specXCursorIndex)
-							/ specPixelPerData + specCenterIndex) - 1;
-					if (start < 0)
-						continue;
-					if ((start >= specSignalData.length)
-							|| (stop >= specSignalData.length))
-						break;
-
-					if ((pointNum + 1) * 8 >= pointsList.length)
-						break;
-
-					pointsList[pointNum * 8] = i + LeftMargin;
-					pointsList[pointNum * 8 + 1] = screenHeight - BottomMargin
-							- (specSignalData[start] - specLower)
+				int dataLen = specSignalData.length;
+				float maxY = 0;
+				float minY = 0;
+				float firstY=0;
+				float lastY = 0;
+				int lastX = Integer.MIN_VALUE;
+				boolean newPt=false;
+				for (int i = freqStartIndex; i < dataLen; i++) {
+					int posX = (int) (specXCursorIndex - (specCenterIndex - i)
+							* specPixelPerData + LeftMargin);
+					if(posX>screenWidth) break;
+					float posY=screenHeight - BottomMargin
+							- (specSignalData[i] - specLower)
 							* (screenHeight - BottomMargin)
 							/ (specUpper - specLower);
-					pointsList[pointNum * 8 + 6] = i + LeftMargin;
-					pointsList[pointNum * 8 + 7] = screenHeight - BottomMargin
-							- (specSignalData[start] - specLower)
-							* (screenHeight - BottomMargin)
-							/ (specUpper - specLower);
-
-					float max = specSignalData[start];
-					float min = specSignalData[start];
-
-					for (int j = start + 1; j < stop; j++) {
-						if (specSignalData[j] > max) {
-							max = specSignalData[j];
+					if(posX!=lastX)
+					{
+						if(lastX!=Integer.MIN_VALUE) //数据点
+						{
+							pointsList[pointNum * 8+0]=lastX;
+							pointsList[pointNum * 8+1]=firstY;
+							pointsList[pointNum * 8+2]=lastX;
+							pointsList[pointNum * 8+3]=minY;
+							pointsList[pointNum * 8+4]=lastX;
+							pointsList[pointNum * 8+5]=maxY;
+							pointsList[pointNum * 8+6]=lastX;
+							pointsList[pointNum * 8+7]=lastY;
+							
+							pointNum++;
+							newPt=false;
+							if ((pointNum + 1) * 8 >= dataLen)
+								break;
 						}
-						if (specSignalData[j] < min) {
-							min = specSignalData[j];
-						}
+						firstY=posY;
+						minY=posY;
+						maxY=posY;
+						lastX=posX;
+						lastY=posY;
+						newPt=true;
 					}
-
-					pointsList[pointNum * 8 + 2] = i + LeftMargin;
-					pointsList[pointNum * 8 + 3] = screenHeight - BottomMargin
-							- (min - specLower) * (screenHeight - BottomMargin)
-							/ (specUpper - specLower);
-
-					pointsList[pointNum * 8 + 4] = i + LeftMargin;
-					pointsList[pointNum * 8 + 5] = screenHeight - BottomMargin
-							- (max - specLower) * (screenHeight - BottomMargin)
-							/ (specUpper - specLower);
-					pointNum++;
+					else
+					{
+						if(posY>maxY)
+						{
+							maxY=posY;
+						}
+						if(posY<minY)
+						{
+							minY=posY;
+						}
+						lastY=posY;
+					}
+					
 				}
+				
 				drawLines(canvas, pointsList, pointNum * 4);
 			}
 		}

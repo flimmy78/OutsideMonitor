@@ -103,7 +103,7 @@ public class WorkMode {
 					+ ((data[offset + i * 5 + 4] & 0xff) << 8);
 			HalfFloat.Halfp2Singles(CoeffB, new int[] { b }, 1);
 
-			calMap.put(FrequencyArray[freqindex], new float[] { CoeffK[0], 0f });
+			calMap.put(FrequencyArray[freqindex], new float[] { CoeffK[0], CoeffB[0] });
 
 		}
 		

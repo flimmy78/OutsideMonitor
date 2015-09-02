@@ -13,7 +13,7 @@ public class SignalUnknown implements ISignal {
 	private float[] spectrumData;
 	boolean showDC=true;
 	private SignalAmpl signalAmpl;
-	
+	private float freq=0;
 	private String unit="";
 	
 	public SignalUnknown(){}
@@ -23,8 +23,9 @@ public class SignalUnknown implements ISignal {
 		this.acAmpl=ampl;
 	}
 	
-	public SignalUnknown(SignalAmpl signalAmpl,String unit)
+	public SignalUnknown(float freq, SignalAmpl signalAmpl,String unit)
 	{
+		this.freq=freq;
 		this.signalAmpl=signalAmpl;
 		this.unit=unit;
 	}
@@ -45,7 +46,10 @@ public class SignalUnknown implements ISignal {
 	{
 		this.acAmpl=ampl;
 	}
-	
+	public float getFreq()
+	{
+		return freq;
+	}
 	public long getTime()
 	{
 		return this.time;
@@ -106,7 +110,7 @@ public class SignalUnknown implements ISignal {
 		unkown.rawData=rawData;
 		unkown.spectrumData=spectrumData;
 		unkown.signalAmpl=signalAmpl;
-		//unkown.unit=unit;
+		unkown.freq=this.freq;
 	}
 
 	@Override

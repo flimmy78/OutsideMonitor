@@ -34,6 +34,11 @@ public class SignalFSK implements ISignal {
 		// this.unit=unit;
 	}
 
+	public float getFreq()
+	{
+		return freqCarrier;
+	}
+	
 	public long getTime()
 	{
 		return this.time;

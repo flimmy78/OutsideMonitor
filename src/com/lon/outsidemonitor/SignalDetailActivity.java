@@ -58,6 +58,7 @@ public class SignalDetailActivity extends Activity {
 					float[] spectrumData = signal.getSpectrumData();
 					signalDetailView.refreshRawData(rawData);
 					signalDetailView.refreshSpectrumData(spectrumData);
+					signalDetailView.updateSpecCenter((int)signal.getFreq());
 					 signalDetailView.addSignalAmpl(signal.getAmpl());
 					secondIndex++;
 				}

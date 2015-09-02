@@ -29,6 +29,7 @@ public class SignalSingle implements ISignal{
 		this.dcAmpl=dcAmpl;
 	}
 	
+	
 	public SignalSingle(float freq,SignalAmpl ampl,String unit)
 	{
 		this.freq=freq;
@@ -46,6 +47,10 @@ public class SignalSingle implements ISignal{
 		this.dcAmpl=ampl;
 	}
 	
+	public float getFreq()
+	{
+		return freq;
+	}
 	public long getTime()
 	{
 		return this.time;
