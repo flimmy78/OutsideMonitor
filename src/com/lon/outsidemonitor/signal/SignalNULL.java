@@ -49,7 +49,7 @@ public class SignalNULL implements ISignal{
 	}
 
 	@Override
-	public short[] getRawData() {
+	public float[] getRawData() {
 		// TODO Auto-generated method stub
 		return null;
 	}

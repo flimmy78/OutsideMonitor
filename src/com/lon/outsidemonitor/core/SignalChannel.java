@@ -10,6 +10,7 @@ import com.lon.outsidemonitor.core.DataBlock;
 import com.lon.outsidemonitor.core.IDataBlock;
 import com.lon.outsidemonitor.dsp.DSPUtil;
 import com.lon.outsidemonitor.dsp.FFTPlan;
+import com.lon.outsidemonitor.dsp.Filter;
 import com.lon.outsidemonitor.dsp.SignalUtil;
 import com.lon.outsidemonitor.signal.ISignal;
 import com.lon.outsidemonitor.signal.ISignalChangedListener;
@@ -34,6 +35,8 @@ public class SignalChannel {
 	int gearSet = 0;
 	Thread threadDSP;
 
+	Filter signalFilter=new Filter();
+	
 	int displayMode = -1; // -1:计算所有信息，显示模式 0：原始波形 1：信号幅度 2:信号频谱
 
 	private ArrayList<DataBlock> listDataBlocks = new ArrayList<DataBlock>(); // 数据块
@@ -70,6 +73,14 @@ public class SignalChannel {
 		// listSignals.add(new SignalNULL());// 小信号
 	}
 
+	public Filter getFilter()
+	{
+		return signalFilter;
+	}
+	public void setFilter(int index)
+	{
+		this.signalFilter.setFilterIndex(index);
+	}
 	public void setDisplayMode(int mode) {
 
 		int num = ModuleManager.getInstance().getModuleNum();
@@ -251,11 +262,12 @@ public class SignalChannel {
 
 		int adLen = ((frame[3] & 0xff) | ((frame[4] & 0xff) << 8)) - 6;// 数据长度
 
-		short[] adData = new short[adLen / 2];
+		float[] adData = new float[adLen / 2];
 
 		for (int j = 0; j < adLen / 2; j++) {
 			short adVal = (short) ((frame[j * 2 + 11] & 0xff) | ((frame[j * 2 + 12] & 0x0f) << 8));
-			adData[j] = adVal;
+			float adFilter=signalFilter.doFilter(adVal);
+			adData[j] = adFilter;
 		}
 		synchronized (listDataBlocks) {
 
@@ -291,6 +303,7 @@ public class SignalChannel {
 		return currentSignal;
 	}
 
+	
 	public WorkMode getWorkMode() {
 		WorkMode modeGet = null;
 		if (gearNow >= 0 && gearNow <= 3) {
@@ -407,7 +420,7 @@ public class SignalChannel {
 			try {
 				while (!Thread.currentThread().isInterrupted()) {
 
-					short[] sampleData = dataBlock.getBlock(-1);
+					float[] sampleData = dataBlock.getBlock(-1);
 					if (sampleData == null)
 						continue;
 					long millisTime = System.currentTimeMillis(); // 获取系统时间

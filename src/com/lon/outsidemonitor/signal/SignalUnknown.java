@@ -9,7 +9,7 @@ public class SignalUnknown implements ISignal {
 	private float acAmpl=0;
 	private float dcAmpl=0;
 	long time=0;
-	private short[] rawData;
+	private float[] rawData;
 	private float[] spectrumData;
 	boolean showDC=true;
 	private SignalAmpl signalAmpl;
@@ -54,7 +54,7 @@ public class SignalUnknown implements ISignal {
 	{
 		return this.time;
 	}
-	public void putRawData(short[] data)
+	public void putRawData(float[] data)
 	{
 		this.rawData=data;
 	}
@@ -114,7 +114,7 @@ public class SignalUnknown implements ISignal {
 	}
 
 	@Override
-	public short[] getRawData() {
+	public float[] getRawData() {
 		// TODO Auto-generated method stub
 		return rawData;
 	}

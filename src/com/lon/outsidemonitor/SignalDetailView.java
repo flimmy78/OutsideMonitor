@@ -234,7 +234,7 @@ public class SignalDetailView extends View {
 		postInvalidate(); // Ë¢ÐÂ
 	}
 
-	public void refreshRawData(short[] data) {
+	public void refreshRawData(float[] data) {
 		if (stoped)
 			return;
 		if ((data == null) || (data.length <= 0))
@@ -244,8 +244,8 @@ public class SignalDetailView extends View {
 
 		}
 
-		int maxAD = 0;
-		int minAD = 4096;
+		float maxAD = 0;
+		float minAD = 4096;
 
 		for (int i = 0; i < data.length; i++) {
 			signalData[i] = data[i];

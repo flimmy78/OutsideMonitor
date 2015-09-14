@@ -54,7 +54,7 @@ public class SignalDetailActivity extends Activity {
 					signalDetailView.refreshRawData(null);
 					signalDetailView.refreshSpectrumData(null);
 				} else {
-					short[] rawData = signal.getRawData();
+					float[] rawData = signal.getRawData();
 					float[] spectrumData = signal.getSpectrumData();
 					signalDetailView.refreshRawData(rawData);
 					signalDetailView.refreshSpectrumData(spectrumData);

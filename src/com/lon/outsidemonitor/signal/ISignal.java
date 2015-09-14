@@ -21,7 +21,7 @@ public SignalType getSignalType();
 	
 	public void copyTo(ISignal dest);
 	
-	public short[] getRawData();
+	public float[] getRawData();
 	public float[] getSpectrumData();
 	
 	public SignalAmpl getAmpl();

@@ -8,11 +8,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DataBlock implements IDataBlock {
 
-	LinkedList<short[]> listFrame = new LinkedList<short[]>();
+	LinkedList<float[]> listFrame = new LinkedList<float[]>();
 	Queue<Short> queue = new LinkedList<Short>();
 
 	
-	short[] ringBuffer;
+	float[] ringBuffer;
 	int ringBegin=0;
 	int ringLength=0;
 	ReentrantLock lock = new ReentrantLock();
@@ -29,10 +29,10 @@ public class DataBlock implements IDataBlock {
 
 		this.window = window;
 		this.slide = slide;
-		this.ringBuffer=new short[window];
+		this.ringBuffer=new float[window];
 	}
 
-	public void putSampleData(short[] data, int offset, int length) {
+	public void putSampleData(float[] data, int offset, int length) {
 		
 	
 
@@ -57,7 +57,7 @@ public class DataBlock implements IDataBlock {
 				
 				if (ringLength == this.window) {
 
-					short[] dataSample = new short[this.window];
+					float[] dataSample = new float[this.window];
 
 					for(int j=0;j<ringLength;j++)
 					{
@@ -82,7 +82,7 @@ public class DataBlock implements IDataBlock {
 		}
 	}
 
-	public void putSampleData(short[] data, int offset, int length,
+	public void putSampleData(float[] data, int offset, int length,
 			int sampleIndex) {
 
 		if ((prevSampleIndex >= 0) && (prevSampleIndex + 1) != sampleIndex) {
@@ -96,9 +96,9 @@ public class DataBlock implements IDataBlock {
 	}
 
 	@Override
-	public short[] getBlock(int timeout) {
+	public float[] getBlock(int timeout) {
 		// TODO Auto-generated method stub
-		short[] frame = null;
+		float[] frame = null;
 		lock.lock();
 		try {
 

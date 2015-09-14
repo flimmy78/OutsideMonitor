@@ -2,7 +2,7 @@ package com.lon.outsidemonitor.core;
 
 public interface IDataBlock {
 
-	short[] getBlock(int timeout);
+	float[] getBlock(int timeout);
 
     int getSampleRate();
 }

@@ -63,16 +63,7 @@ public class ModuleInfoAdapter extends BaseAdapter{
           img.setBackgroundResource(info.getImageId());
       }  
       TextView text=(TextView) view.findViewById(R.id.addexam_list_item_text);  
-      String name=info.getName();
-      if(info.isGroup()==false)
-      {
-    	  ISignal signal=info.getSignal();
-    	  if(signal!=null)
-    	  {
-    		  name+=signal.getSignalInfo();
-    	  }
-      	
-      }
+      String name=info.getDescription();
       text.setText(name);  
       return view;  
   }  

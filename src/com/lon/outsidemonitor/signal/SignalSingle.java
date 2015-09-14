@@ -10,7 +10,7 @@ public class SignalSingle implements ISignal{
 	private float freq=0;
 	long time=0;
 	
-	private short[] rawData;
+	private float[] rawData;
 	private float[] spectrumData;
 	
 	
@@ -59,7 +59,7 @@ public class SignalSingle implements ISignal{
 	{
 		return freq;
 	}
-	public void putRawData(short[] data)
+	public void putRawData(float[] data)
 	{
 		rawData=data;
 	}
@@ -129,7 +129,7 @@ public class SignalSingle implements ISignal{
 		
 	}
 	@Override
-	public short[] getRawData() {
+	public float[] getRawData() {
 		// TODO Auto-generated method stub
 		return rawData;
 	}

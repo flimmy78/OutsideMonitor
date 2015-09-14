@@ -9,7 +9,7 @@ public class SignalFSK implements ISignal {
 	float freqCarrier = 0; // ‘ÿ∆µ
 	float freqLower = 0; // µÕ∆µ
 	long time=0;
-	short[] rawData = null;
+	float[] rawData = null;
 	float[] spectrumData = null;
 	SignalAmpl signalAmpl = null;
 	private String unit = "";
@@ -51,7 +51,7 @@ public class SignalFSK implements ISignal {
 		this.dcAmpl = ampl;
 	}
 
-	public void putRawData(short[] data) {
+	public void putRawData(float[] data) {
 		this.rawData = data;
 	}
 
@@ -115,7 +115,7 @@ public class SignalFSK implements ISignal {
 	}
 
 	@Override
-	public short[] getRawData() {
+	public float[] getRawData() {
 		// TODO Auto-generated method stub
 		return rawData;
 	}

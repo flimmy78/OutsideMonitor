@@ -7,13 +7,19 @@ import java.util.TimerTask;
 
 import com.lon.outsidemonitor.core.ModuleInfo;
 import com.lon.outsidemonitor.core.ModuleManager;
+import com.lon.outsidemonitor.core.SignalChannel;
+import com.lon.outsidemonitor.core.SignalModule;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
 import android.content.Intent;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnCreateContextMenuListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -60,6 +66,27 @@ public class ModuleInfoActivity extends Activity {
 		});
 		
 		
+		listview.setOnCreateContextMenuListener(new OnCreateContextMenuListener(){
+
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View arg1,
+					ContextMenuInfo arg2) {
+				// TODO Auto-generated method stub
+              menu.add(0, 0, 0, "不滤波"); 
+              menu.add(0, 1, 0, "[000-400]低通"); 
+              menu.add(0, 2, 0, "[500-600]带通"); 
+              menu.add(0, 3, 0, "[600-700]带通"); 
+              menu.add(0, 4, 0, "[700-800]带通"); 
+              menu.add(0, 5, 0, "[800-900]带通"); 
+              menu.add(0, 6, 0, "[1650-1750]带通"); 
+              menu.add(0, 7, 0, "[1950-2050]带通"); 
+              menu.add(0, 8, 0, "[2250-2350]带通"); 
+              menu.add(0, 9, 0, "[2550-2650]带通"); 
+			}
+			
+			
+		});
+			
 		final Handler handler = new Handler() {
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
@@ -83,6 +110,31 @@ public class ModuleInfoActivity extends Activity {
 		timer.schedule(task, 1000, 1000); // 延时1000ms后执行，1000ms执行一次
 
 	}
+	
+	 // 长按菜单响应函数 
+	@Override
+    public boolean onContextItemSelected(MenuItem item) { 
+
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo(); 
+            
+            int id=item.getItemId();
+            
+            int pos= listview.getSelectedItemPosition();
+           
+            
+          SignalModule module=  ModuleManager.getInstance().getModule(pos/4);
+          if(module!=null)
+          {
+        	SignalChannel channel=  module.getChannel((pos%4)-1);
+        	if(channel!=null)
+        	{
+        		channel.setFilter(id-1);
+        	}
+          }
+            
+          return super.onContextItemSelected(item); 
+
+    } 
 
 //	@Override
 //	public boolean onCreateOptionsMenu(Menu menu) {
