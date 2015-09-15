@@ -73,15 +73,15 @@ public class ModuleInfoActivity extends Activity {
 					ContextMenuInfo arg2) {
 				// TODO Auto-generated method stub
               menu.add(0, 0, 0, "不滤波"); 
-              menu.add(0, 1, 0, "[000-400]低通"); 
-              menu.add(0, 2, 0, "[500-600]带通"); 
-              menu.add(0, 3, 0, "[600-700]带通"); 
-              menu.add(0, 4, 0, "[700-800]带通"); 
-              menu.add(0, 5, 0, "[800-900]带通"); 
-              menu.add(0, 6, 0, "[1650-1750]带通"); 
-              menu.add(0, 7, 0, "[1950-2050]带通"); 
-              menu.add(0, 8, 0, "[2250-2350]带通"); 
-              menu.add(0, 9, 0, "[2550-2650]带通"); 
+              menu.add(0, 1, 0, "<400Hz低通"); 
+              menu.add(0, 2, 0, "550Hz带通"); 
+              menu.add(0, 3, 0, "650Hz带通"); 
+              menu.add(0, 4, 0, "750Hz带通"); 
+              menu.add(0, 5, 0, "850Hz带通"); 
+              menu.add(0, 6, 0, "1700Hz带通"); 
+              menu.add(0, 7, 0, "2000Hz带通"); 
+              menu.add(0, 8, 0, "2300Hz带通"); 
+              menu.add(0, 9, 0, "2600Hz带通"); 
 			}
 			
 			

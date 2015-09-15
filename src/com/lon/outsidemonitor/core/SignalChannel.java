@@ -483,7 +483,10 @@ public class SignalChannel {
 							.calRealVal(dcacAmpl[0], 0);
 					float acAmpl = SignalChannel.this.calRealVal(dcacAmpl[1],
 							peakIndex[0]);
-
+					if(SignalChannel.this.signalFilter.getFilterIndex()>=1)
+					{
+						dcAmpl=0;
+					}
 					if (isSingle) {
 						signalAmplA.addAmpl(acAmpl, millisTime);
 						SignalSingle signal = new SignalSingle(peakIndex[0],
