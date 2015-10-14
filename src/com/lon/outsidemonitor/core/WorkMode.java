@@ -106,6 +106,9 @@ public class WorkMode {
 			calMap.put(FrequencyArray[freqindex], new float[] { CoeffK[0], CoeffB[0] });
 
 		}
+		this.adMax=5;
+		this.adMin=0;
+		this.unit="A";
 		
 		
 		

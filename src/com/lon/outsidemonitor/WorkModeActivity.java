@@ -52,7 +52,8 @@ public class WorkModeActivity extends Activity {
 					int position, long id) {
 				// TODO Auto-generated method stub
 
-				if((position%4)==0) return;
+				//if((position%4)==0) return;
+				if(position<=4) return;
 				SignalChannel channel = ModuleManager.getInstance().getModule(position/4)
 						.getChannel((position%4)-1);
 
